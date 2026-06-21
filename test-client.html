@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<body>
+  <button id="connectBtn">Connect</button>
+  <button id="createBtn">Create Room</button>
+  <pre id="log"></pre>
+
+  <script>
+    let ws;
+    const log = document.getElementById("log");
+
+    function write(data) {
+      log.textContent += data + "\n";
+    }
+
+    document.getElementById("connectBtn").onclick = () => {
+      ws = new WebSocket("ws://localhost:3000");
+
+      ws.onopen = () => write("connected");
+      ws.onmessage = (event) => write(event.data);
+      ws.onerror = () => write("error");
+      ws.onclose = () => write("closed");
+    };
+
+    document.getElementById("createBtn").onclick = () => {
+      ws.send(JSON.stringify({ type: "createRoom" }));
+    };
+  </script>
+</body>
+</html>
