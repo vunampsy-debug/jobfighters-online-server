@@ -1,8 +1,8 @@
 {
   "name": "jobfighters-online-server",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "Realtime WebSocket room server for Job Fighters Classic",
+  "description": "Realtime WebSocket room server for Job Fighters Classic online mode",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

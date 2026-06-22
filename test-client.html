@@ -1,29 +1,112 @@
 <!doctype html>
-<html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <title>Job Fighters Online Server Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #fff;
+      padding: 24px;
+    }
+
+    button, input {
+      font-size: 16px;
+      padding: 10px 14px;
+      margin: 6px;
+    }
+
+    input {
+      width: 160px;
+    }
+
+    pre {
+      background: #111a33;
+      padding: 16px;
+      border: 1px solid #35518c;
+      min-height: 300px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
 <body>
+  <h1>Job Fighters Online Server Test</h1>
+
   <button id="connectBtn">Connect</button>
   <button id="createBtn">Create Room</button>
+
+  <input id="roomInput" placeholder="Room code" />
+  <button id="joinBtn">Join Room</button>
+
+  <button id="pingBtn">Ping</button>
+
   <pre id="log"></pre>
 
   <script>
-    let ws;
+    let ws = null;
+
+    const SERVER_URL = "wss://jobfighters-online-server.onrender.com";
     const log = document.getElementById("log");
 
     function write(data) {
       log.textContent += data + "\n";
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function send(type, payload = {}) {
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        write("WebSocket chưa kết nối.");
+        return;
+      }
+
+      ws.send(JSON.stringify({ type, ...payload }));
     }
 
     document.getElementById("connectBtn").onclick = () => {
-      ws = new WebSocket("ws://localhost:3000");
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        write("Đã kết nối rồi, không cần bấm Connect lại.");
+        return;
+      }
 
-      ws.onopen = () => write("connected");
-      ws.onmessage = (event) => write(event.data);
-      ws.onerror = () => write("error");
-      ws.onclose = () => write("closed");
+      ws = new WebSocket(SERVER_URL);
+
+      ws.onopen = () => {
+        write("CONNECTED to " + SERVER_URL);
+      };
+
+      ws.onmessage = (event) => {
+        write(event.data);
+
+        try {
+          const msg = JSON.parse(event.data);
+
+          if (msg.type === "roomCreated" && msg.roomCode) {
+            document.getElementById("roomInput").value = msg.roomCode;
+          }
+        } catch {}
+      };
+
+      ws.onerror = () => {
+        write("ERROR");
+      };
+
+      ws.onclose = () => {
+        write("CLOSED");
+      };
     };
 
     document.getElementById("createBtn").onclick = () => {
-      ws.send(JSON.stringify({ type: "createRoom" }));
+      send("createRoom");
+    };
+
+    document.getElementById("joinBtn").onclick = () => {
+      const roomCode = document.getElementById("roomInput").value.trim();
+      send("joinRoom", { roomCode });
+    };
+
+    document.getElementById("pingBtn").onclick = () => {
+      send("ping", { t: Date.now() });
     };
   </script>
 </body>
