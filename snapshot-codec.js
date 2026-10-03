@@ -1,0 +1,9 @@
+/* Identical wire schema on browser and relay server. */
+(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.PvpSnapshotCodec=factory();})(typeof window!=='undefined'?window:globalThis,function(){
+  'use strict';
+  const fields = ["id", "x", "y", "vx", "vy", "facing", "maxHealth", "health", "energy", "state", "onGround", "blocking", "crouching", "hitStun", "stunTimer", "attack", "attackLock", "specialCooldown", "flash", "buffNextAttack", "slowTimer", "blindTimer", "blindColor", "attackSealTimer", "bleedTimer", "bleedDps", "minhBuffTimer", "damageDownTimer", "auditDebtTimer", "huongCycleActive", "huongCycleIndex", "huongCycleTimer", "rimuruDemonLordTimer", "gambleTimer", "gambleElapsed", "gambleDamageBonus", "stemRobotTimer", "stemRobotActive", "stemRobotDamageMultiplier", "lastSkillName", "lastSkillColor", "skillDisplayTimer", "rushTimer", "rushDamage", "rushDir", "rushSpeed", "rushRecoveryTimer", "zeroMode", "zeroDive", "zeroDamage", "slamTimer", "knockdownTimer", "knockdownDuration", "throwTimer", "dashTimer", "backdashTimer", "wallJumpBoostTimer", "specialShieldTimer", "perfectBlockFlash", "parryFlash", "counterHitFlash", "guardBreakTimer", "guardMeter", "comboCount", "comboLabelTimer", "mashCount", "consecutiveBlocks", "shieldBreakFlash", "ko", "animTime"];
+  function pack(snapshot){const out={...snapshot};for(const key of ['p1','p2','p3','p4'])if(out[key])out[key]=fields.map(name=>out[key][name]??null);return out;}
+  function unpack(snapshot){const out={...snapshot};for(const key of ['p1','p2','p3','p4'])if(Array.isArray(out[key])){const values=out[key];if(values.length!==fields.length)throw new Error('Invalid snapshot schema');out[key]=Object.fromEntries(fields.map((name,i)=>[name,values[i]]));}return out;}
+  const stringify = value => JSON.stringify(value,(key,v)=>typeof v==='number'&&Number.isFinite(v)?Math.round(v*100)/100:v);
+  return {pack,unpack,stringify};
+});

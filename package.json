@@ -1,13 +1,22 @@
 {
-  "name": "jobfighters-online-server",
-  "version": "1.1.0",
+  "name": "job-fighters-classic-v3-15-0-online-pvp",
+  "version": "3.15.0",
   "private": true,
-  "description": "Realtime WebSocket room server for Job Fighters Classic online mode",
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "validate": "node tools/static-validate-v3150.js",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser-pvp.cjs",
+    "build:vercel": "node tools/build-vercel.cjs"
   },
   "dependencies": {
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  },
+  "description": "Job Fighters Classic — Online PvP 1v1 / 2v2 with ready lobbies and match synchronization",
+  "engines": {
+    "node": ">=20"
   }
 }
