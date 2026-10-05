@@ -19,7 +19,7 @@ test('valid fight and terminal snapshots relay without emitting a spurious roomE
       const host=await client();host.send('createRoom',{maxPlayers:slots});const room=await host.wait('roomCreated');const all=[host];
       for(let n=1;n<slots;n++){const g=await client();g.send('joinRoom',{code:room.code});await g.wait('joined');all.push(g);}
       host.send('setRules',{rules:{timeLimit:99,healthBars:3,roundLimit:3}});await all[1].wait('rules');
-      const ids=['doctor','teacher','engineer','chef'];
+      const ids=['buivandat','nghiemxuanquang','doctor','teacher'];
       for(let n=0;n<slots;n++){all[n].send('selectCharacter',{characterId:ids[n],playerNumber:n+1});await all[n].wait('pick',m=>m.player===n+1);all[n].send('playerReady',{ready:true});await all[n].wait('roomStatus',m=>m.roster.some(p=>p.playerNumber===n+1&&p.ready));}
       host.send('startMatch',{stage:'classroom',currentRound:1});const start=await host.wait('startMatch');await Promise.all(all.slice(1).map(c=>c.wait('startMatch')));
       for(const state of ['fight','roundOver']){
