@@ -1,6 +1,6 @@
 {
   "name": "job-fighters-classic-v3-15-0-online-pvp",
-  "version": "3.15.0",
+  "version": "3.15.1",
   "private": true,
   "scripts": {
     "start": "node server.js",
@@ -15,7 +15,7 @@
   "devDependencies": {
     "playwright": "1.62.1"
   },
-  "description": "Job Fighters Classic — Online PvP 1v1 / 2v2 with ready lobbies and match synchronization",
+  "description": "Job Fighters Classic \u2014 Online PvP 1v1 / 2v2 with ready lobbies and match synchronization",
   "engines": {
     "node": ">=20"
   }

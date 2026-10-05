@@ -1,4 +1,4 @@
-/* PvP v3.15.0: server owns rooms; host owns combat simulation. */
+/* PvP v3.15.1: server owns rooms; host owns combat simulation. */
 'use strict';
 const http = require('node:http');
 const fs = require('node:fs');
@@ -6,7 +6,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { WebSocketServer } = require('ws');
 const codec=require('./snapshot-codec.js');
-const ROOT = __dirname, VERSION = '3.15.0', rooms = new Map();
+const ROOT = __dirname, VERSION = '3.15.1', rooms = new Map();
 const catalog = JSON.parse(fs.readFileSync(path.join(ROOT, 'online/catalog.json')));
 const characters = new Set(catalog.characters), stages = new Set(catalog.stages);
 const origins = new Set((process.env.ALLOWED_ORIGINS || '').split(',').map(x => x.trim()).filter(Boolean));
@@ -194,6 +194,7 @@ function handle(ws,msg) {
     const packet={type:'state',snapshot:wireSnapshot,packed:!!msg.packed,frame:Number(msg.frame) || 0,matchId:room.matchId};
     if (Array.isArray(msg.targets)) for(const c of room.clients) { if(c!==ws && msg.targets.includes(c.playerNumber))send(c,packet,true); }
     else broadcast(room,packet,ws,true);
+    return;
   }
   if (type === 'pause' || type === 'resume') {
     if (msg.matchId !== room.matchId) return;
